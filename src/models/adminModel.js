@@ -16,6 +16,8 @@ const adminSchema=mongoose.Schema({
         type:String,
     }
      
+},{
+    timestamps:true
 });
 
 
