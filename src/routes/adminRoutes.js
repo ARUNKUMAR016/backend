@@ -5,12 +5,13 @@ const adminRouter = express.Router();
 
 adminRouter.post("/insert", async (req, res) => {
   try {
-    const { title, genre, about } = req.body;
+    const { title, genre, about,movieUrl } = req.body;
 
     const data = new Admin({
       title,
       genre,
       about,
+      movieUrl
     });
 
     await data.save();

@@ -11,6 +11,9 @@ const adminSchema=mongoose.Schema({
     },
     genre:{
         type:String,
+    },
+    movieUrl:{
+        type:String,
     }
      
 });
