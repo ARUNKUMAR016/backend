@@ -30,7 +30,7 @@ jobs:
             --exclude='.git' --exclude='node_modules' \
             ./ ubuntu@13.51.171.2:/home/ubuntu/tmp-api/
 
-            - name: Replace backend and restart app
+      - name: Replace backend and restart app
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@13.51.171.2 << 'EOF'
             sudo rm -rf /home/ubuntu/onstep/api/*
@@ -40,4 +40,3 @@ jobs:
             npm install
             pm2 restart server.js || pm2 start server.js --name api
           EOF
-
