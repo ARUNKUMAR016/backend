@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy Node.js API to EC2
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - development
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest 
+  deploy-api:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -16,47 +16,22 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '23'
-
-      # React: Install and build
-      - name: Install frontend dependencies
-        run: |
-          cd react
-          npm install
-
-      - name: Build frontend
-        run: |
-          cd react
-          npm run build
+          node-version: '18'  # Use a stable version for backend
 
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
 
-      # Upload frontend build to EC2
-      - name: Upload React build to EC2
-        run: |
-          scp -o StrictHostKeyChecking=no -r ./react/dist/* ubuntu@13.51.171.2:/home/ubuntu/tmp/
-
-      # Upload API code to EC2
-      - name: Upload Node.js API to EC2
+      - name: Upload backend files to EC2
         run: |
           scp -o StrictHostKeyChecking=no -r ./api/* ubuntu@13.51.171.2:/home/ubuntu/tmp-api/
 
-      # Final deployment script on EC2
-      - name: Move files and restart backend on EC2
+      - name: Replace backend and restart app
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@13.51.171.2 << 'EOF'
-            # Move React build
-            sudo rm -rf /home/ubuntu/onstep/react/*
-            sudo mv /home/ubuntu/tmp/* /home/ubuntu/onstep/react/
-
-            # Move backend (API)
             sudo rm -rf /home/ubuntu/onstep/api/*
             sudo mv /home/ubuntu/tmp-api/* /home/ubuntu/onstep/api/
-
-            # Restart Node backend
             cd /home/ubuntu/onstep/api
             npm install
             pm2 restart app.js || pm2 start app.js --name api
