@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: '18'  # Use a stable LTS version
 
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.5.3
@@ -25,7 +25,10 @@ jobs:
 
       - name: Upload backend files to EC2
         run: |
-          rsync -avz --exclude='.git' --exclude='node_modules' ./ ubuntu@13.51.171.2:/home/ubuntu/tmp-api/
+          rsync -avz \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            --exclude='.git' --exclude='node_modules' \
+            ./ ubuntu@13.51.171.2:/home/ubuntu/tmp-api/
 
       - name: Replace backend and restart app
         run: |
