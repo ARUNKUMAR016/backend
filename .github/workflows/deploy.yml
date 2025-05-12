@@ -30,7 +30,7 @@ jobs:
             --exclude='.git' --exclude='node_modules' \
             ./ ubuntu@13.51.171.2:/home/ubuntu/tmp-api/
 
-      - name: Replace backend and restart app
+            - name: Replace backend and restart app
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@13.51.171.2 << 'EOF'
             sudo rm -rf /home/ubuntu/onstep/api/*
@@ -38,6 +38,6 @@ jobs:
             sudo chown -R ubuntu:ubuntu /home/ubuntu/onstep/api
             cd /home/ubuntu/onstep/api
             npm install
-            # START OR RESTART BACKEND (adjust if entry is not app.js)
-            pm2 restart app.js || pm2 start app.js --name api
+            pm2 restart server.js || pm2 start server.js --name api
           EOF
+
