@@ -34,9 +34,10 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@13.51.171.2 << 'EOF'
             sudo rm -rf /home/ubuntu/onstep/api/*
-            sudo mv /home/ubuntu/tmp-api/* /home/ubuntu/onstep/api/
+            sudo cp -r /home/ubuntu/tmp-api/. /home/ubuntu/onstep/api/
+            sudo rm -rf /home/ubuntu/tmp-api/*
             sudo chown -R ubuntu:ubuntu /home/ubuntu/onstep/api
             cd /home/ubuntu/onstep/api
             npm install
-            pm2 restart server.js || pm2 start server.js --name api
+            pm2 restart src/app.js || pm2 start src/app.js --name api
           EOF
